@@ -67,11 +67,10 @@ public class Compiler {
 		MiniJavaParser parser = new MiniJavaParser(tokens);
         parser.removeErrorListeners(); // remove ConsoleErrorListener
         parser.addErrorListener(new UnderlineListener());
-        parser.goal();
 
         Class parserClass = MiniJavaParser.class;
         Method nsme1 = parserClass.getMethod("goal", new Class[0]);
-        ParserRuleContext tree1 = (ParserRuleContext) nsme1.invoke(parser, (Object[]) null);
+        ParserRuleContext tree1 = (ParserRuleContext)nsme1.invoke(parser, (Object[]) null);
         Trees.inspect(tree1, parser);
     }
 }
