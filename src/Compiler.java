@@ -8,9 +8,12 @@
 ***/
 //import com.sun.istack.internal.Nullable;
 import org.antlr.v4.runtime.*;
+import org.antlr.v4.gui.Trees;
 import java.util.*;
 import base.MiniJavaLexer;
 import base.MiniJavaParser;
+import java.lang.reflect.Method;
+
 
 public class Compiler {
     public static class UnderlineListener extends BaseErrorListener {
@@ -51,5 +54,10 @@ public class Compiler {
         parser.removeErrorListeners(); // remove ConsoleErrorListener
         parser.addErrorListener(new UnderlineListener());
         parser.goal();
+
+        Class parserClass = MiniJavaParser.class;
+        Method nsme1 = parserClass.getMethod("goal", new Class[0]);
+        ParserRuleContext tree1 = (ParserRuleContext) nsme1.invoke(parser, (Object[]) null);
+        Trees.inspect(tree1, parser);
     }
 }
