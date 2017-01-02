@@ -13,6 +13,7 @@ import java.util.*;
 import base.MiniJavaLexer;
 import base.MiniJavaParser;
 import java.lang.reflect.Method;
+import java.io.*;
 
 
 public class Compiler {
@@ -47,7 +48,20 @@ public class Compiler {
     }
 
     public static void main(String[] args) throws Exception {
-        ANTLRInputStream input = new ANTLRInputStream(System.in);
+        
+        InputStream is = System.in;
+        if (args.length < 1) {
+            System.err.println("java Compiler [input-filename]");
+            System.err.println("Omitting input-filename makes compiler read from stdin");
+        }
+        else {
+            String inputFilename = args[0];
+            String absolutePath = System.getProperty("user.dir") + "/resources/" + inputFilename;
+            is = new FileInputStream(absolutePath);
+        }
+
+        InputStreamReader r = new InputStreamReader((InputStream)is);
+        ANTLRInputStream input = new ANTLRInputStream(r);
         MiniJavaLexer lexer = new MiniJavaLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
 		MiniJavaParser parser = new MiniJavaParser(tokens);
