@@ -9,12 +9,13 @@
 //import com.sun.istack.internal.Nullable;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.gui.Trees;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import java.util.*;
 import base.MiniJavaLexer;
 import base.MiniJavaParser;
 import java.lang.reflect.Method;
 import java.io.*;
-
 
 public class Compiler {
     public static class UnderlineListener extends BaseErrorListener {
@@ -67,10 +68,13 @@ public class Compiler {
 		MiniJavaParser parser = new MiniJavaParser(tokens);
         parser.removeErrorListeners(); // remove ConsoleErrorListener
         parser.addErrorListener(new UnderlineListener());
+        ParseTree tree = parser.goal();
 
-        Class parserClass = MiniJavaParser.class;
-        Method nsme1 = parserClass.getMethod("goal", new Class[0]);
-        ParserRuleContext tree1 = (ParserRuleContext)nsme1.invoke(parser, (Object[]) null);
-        Trees.inspect(tree1, parser);
+        ParseTreeWalker walker = new ParseTreeWalker();
+        CheckPhase checkPhase = new CheckPhase();
+        walker.walk(checkPhase, tree); 
+
+        Trees.inspect(tree, parser);
+
     }
 }
